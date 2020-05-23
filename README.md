@@ -70,7 +70,7 @@ For training:
 For testing:
 
 ```
-./nn test  <dataset name> <network cfg file> <load weights file>
+./nn test  <dataset name> <network cfg file> <load weights file> -cpu
 ```
 
   For example

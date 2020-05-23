@@ -1,8 +1,9 @@
 # ArchNet
-A neural network for architecture research
+A neural network for architecture research.
 
 **Why another neural network framework?**
-The primary target users of ArchNet are computer architecture researchers who need to modify lower level implementations of neural network computing. However, as speed and configurability are carefully considered since the begining of the development, ArchNet can also be used in general neural network researches.
+
+The primary target users of ArchNet are computer architecture researchers who need to modify lower level implementations of neural network computing. However, as speed and configurability are carefully considered since the beginning of the development, ArchNet can also be used in general neural network researches.
 
 In architecture research, researchers often need to make modifications at the lowest level of neural network computing, e.g., modify the CUDA kernels for convolutions, change all computations into fixed point format for quantization, use stochastic computing for cheap circuit implementation, etc. However, current existing neural networks do not provide an easy way to make these modifications feasible. Because their primary focus is speed and flexibility, it is very hard to dig too deep into the code. On the contrary, ArchNet only implements the most common layers in CNNs, all the codes are very clean and easy to understand (with sufficient comments), while not sacrificing the speed of execution.
 
@@ -40,35 +41,52 @@ There are three flags in Makefile for different computing schemes.
 
 For training:
 
-    ./nn train <dataset name> <network cfg file> <load weights file[null]> <save weights file[null]> -cpu
+'''
+./nn train <dataset name> <network cfg file> <load weights file[null]> <save weights file[null]> -cpu
+'''
 
-        e.g. ./nn train mnist cfg/mnist_cnn.cfg null weights/mnist.weights
+  For example
 
-        You can also perform training based on some exsiting weights by changing null to some exiting weights file, e.g.
-        ./nn train mnist cfg/mnist_cnn.cfg weights/mnist.weights_old weights/mnist.weights_new
+'''
+./nn train mnist cfg/mnist_cnn.cfg null weights/mnist.weights
+'''
 
-        By setting -cpu flag, the execution will only use cpu even the code is compiled with GPU flag set in the Makefile.
+  You can also perform training based on some exsiting weights by changing null to some exiting weights file, e.g.
+
+'''
+./nn train mnist cfg/mnist_cnn.cfg weights/mnist.weights_old weights/mnist.weights_new
+'''
+
+  By setting -cpu flag, the execution will only use cpu even the code is compiled with GPU flag set in the Makefile.
 
 For testing:
 
-    ./nn test  <dataset name> <network cfg file> <load weights file>
+'''
+./nn test  <dataset name> <network cfg file> <load weights file>
+'''
 
-        e.g. ./nn train mnist cfg/mnist_cnn.cfg weights/mnist.weights
+  For example
 
-        By setting -cpu flag, the execution will only use cpu even the code is compiled with GPU flag set in the Makefile.
+'''
+./nn train mnist cfg/mnist_cnn.cfg weights/mnist.weights
+'''
+
+  By setting -cpu flag, the execution will only use cpu even the code is compiled with GPU flag set in the Makefile.
 
  **Dataset**
 
-To download the dataset, go to the data folder and execute the python file.
+To download the dataset, go to the data folder and execute the python file. e.g.
+
+'''
+cd data/minst
+python download_mnist.py
+'''
 
  **Layers**
 
-Config file format:
+To write a config file, the format must strictly follow the instructions in this section. It is recommended to modify from an existing config file in cfg folder.
 
-    To write a config file, the format must strictly follow the instructions in this
-    section. It is recommended to modify from an existing config file in cfg folder.
-
-    [global]
+- **[global]**
     layers: total number of layers in the network.
     epochs: number of epochs in training.
     lr_begin: the learning rate in the first epoch. Learning rate decreases linearly during training.
@@ -76,26 +94,32 @@ Config file format:
     show_acc: 0 - 2. 0: print the least information, 2: print the most information.
     flip: randomly flip the input image to augment dataset.
 
-    [input]
+- **[input]**
+
     shape: four integers seperated by space, meaning batch size, channels, height, width.
 
-    [convolution]
+- **[convolution]**
+
     filterSize: three integers seperated by space, meaning number of filters, height of each filter, width of each filter.
     stride: two integers seperated by space, meaning the step along height and width dimensions of the input.
     padding: two integers seperated by space, meaning the number of 0 paddings on each side of the height and width dimensions of the input. For example, if set to 1 and 2, there will be 1 row of 0s padding on the top and bottom of the image, and two rows of 0s padding on the left and right of the image.
 
-    [full]
+- **[full]**
+
     length: one integer indicating the number of output neurons.
 
-    [activation]
+- **[activation]**
+
     nonlinear: a string one of "relu", "sigmoid" and "softmax".
 
-    [pool]
+- **[pool]**
+
     poolType: a string one of "max" and "mean".
     filterSize: two integers seperated by space, meaning pooling window size along height and width dimensions of the input.
     stride: two integers seperated by space, meaning the step along height and width dimensions of the input.
     padding: two integers seperated by space, meaning the number of 0 paddings on each side of the height and width dimensions of the input. For example, if set to 1 and 2, there will be 1 row of 0s padding on the top and bottom of the image, and two rows of 0s padding on the left and right of the image.
 
-    [batchnormalization]
+- **[batchnormalization]**
+
     Currently not implemented.
 
